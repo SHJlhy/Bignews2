@@ -77,71 +77,89 @@
       </div>
     </div>
   </div>
-
-
-
-  <script type=text/html id='catem'>
-    {{each data}}
-    <tr>
-      <td>{{$value.name}}</td>
-      <td>{{$value.slug}}</td>
-      <td class="text-center">
-        <a href="#" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
-        <a href="#" class="btn btn-danger btn-xs">删除</a>
-      </td>
-    </tr>
-    {{/each}}
-  </script>
-  <script>
-    $(function() {
-      // 打开页面的时候 获取数据 渲染页面 有结构  之前用户信息获取数据渲染  只是填充表单的内容不涉及到结果   调用接口 
-      //   这一步相当页之前的获取数组 循环遍历添加到结构 渲染
-      function loadData() {
-        $.ajax({
-          url: BigNew.category_list,
-          success: function(backData) {
-            console.log(backData);
-            //   4 调用方法 有返回值
-            var html = template('catem', backData);
-            // 5 把返回值添加到结构 渲染
-            $('tbody').html(html);
-          }
-        })
-      }
-      loadData();
-
-
-
-      //   新增分类功能
-      //   1 点击新增按钮  2弹出弹框 弹框不是内置的  bootstrap 下的模态框 找到类似的修改
-      //   3 调用接口
-      $('.btn-primary').click(function() {
-        var name = $('.name').val();
-        var slug = $('.slug').val();
-
-        $.ajax({
-          url: BigNew.category_add,
-          type: 'post',
-          data: {
-            name: name,
-            slug: slug,
-          },
-          success: function(backData) {
-            // 创建成功 弹框隐藏 数据更新
-            if (backData.code == 201) {
-              // 提示用户创建成功
-              alert('创建成功');
-              $('#myModal').modal('hide');
-              loadData();
-              //   创建成功后清空内容
-            }
-          }
-        })
+</body>
+<script type=text/html id='catem'>
+  {{each data}}
+  <tr>
+    <td>{{$value.name}}</td>
+    <td>{{$value.slug}}</td>
+    <td class="text-center">
+      <a href="#" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
+      <a href="#" class="btn btn-danger btn-xs btn-del" data-id='{{$value.id}}'>删除</a>
+    </td>
+  </tr>
+  {{/each}}
+</script>
+<script>
+  $(function() {
+    // 打开页面的时候 获取数据 渲染页面 有结构  之前用户信息获取数据渲染  只是填充表单的内容不涉及到结果   调用接口 
+    //   这一步相当页之前的获取数组 循环遍历添加到结构 渲染
+    function loadData() {
+      $.ajax({
+        url: BigNew.category_list,
+        success: function(backData) {
+          console.log(backData);
+          //   4 调用方法 有返回值
+          var html = template('catem', backData);
+          // 5 把返回值添加到结构 渲染
+          $('tbody').html(html);
+        }
       })
+    }
+    loadData();
 
 
 
+    //   新增分类功能
+    //   1 点击新增按钮  2弹出弹框 弹框不是内置的  bootstrap 下的模态框 找到类似的修改
+    //   3 调用接口
+    $('.btn-primary').click(function() {
+      var name = $('.name').val();
+      var slug = $('.slug').val();
+
+      $.ajax({
+        url: BigNew.category_add,
+        type: 'post',
+        data: {
+          name: name,
+          slug: slug,
+        },
+        success: function(backData) {
+          // 创建成功 弹框隐藏 数据更新
+          if (backData.code == 201) {
+            // 提示用户创建成功
+            alert('创建成功');
+            $('#myModal').modal('hide');
+            loadData();
+            //   创建成功后清空内容
+          }
+        }
+      })
     })
-  </script>
+
+
+    // //   删除分类功能....................................
+    // //   页面上的数据都是动态添加的  给动态的标签添加事件 使用事件委托 找到父元素
+    $('tbody').on('click', '.btn-del', function() {
+      //   调用接口
+      // 获取id 删除数据 就会涉及到id  把id以自定义属性的方式放在点击的标签内部
+      var id = $(this).attr('data-id')
+      $.ajax({
+        url: BigNew.category_delete,
+        type: 'post',
+        data: {
+          id: id,
+        },
+        success: function(backData) {
+          console.log(backData);
+          if (backData.code == 204) {
+            //   更新数据
+            loadData();
+          }
+        }
+      })
+    })
+  })
+</script>
 
 </html>
