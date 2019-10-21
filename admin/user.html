@@ -123,6 +123,19 @@
       })
 
 
+      // 设置图片预览.................................
+      // 1 获取文本框  注册change 事件
+      // 2 获取文本框中文件
+      // 3给文件设置临时地址
+      // 4 把临时地址 设置为图片的src 属性值
+      $('#exampleInputFile').change(function() {
+        // 获取文本域的图片 对象必须是dom对象
+        var url = URL.createObjectURL(this.files[0])
+          // 设置图片的src
+        $('.user_pic').attr('src', url)
+
+      })
+
 
     })
   </script>
