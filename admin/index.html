@@ -81,6 +81,16 @@
         }
 
       })
+
+      // 退出功能......................................
+      // 退出的标签在首页 所以在首页写代码,不需要调用接口 直接删除本地信息即可 返回登录页面
+      $('.logout').click(function() {
+        // 友好提示 询问框
+        if (confirm('你真的不爱我了吗')) {
+          localStorage.removeItem('token');
+          location.href = '../admin/login.html';
+        }
+      })
     })
   </script>
 </body>
