@@ -85,7 +85,41 @@
           //   用户图标没有获取到 把修改的值改回来重新设置
           $('.user_pic').attr('src', backData.data.userPic)
         }
+      })
 
+
+      //   修改用户信息..........................................
+      //   1 点击修改按钮修改信息 2 调用接口 修改信息  获取修改后的内容  涉及到表单  用FormData()
+      //   参数必须是FormData 类型的数据
+      $('.btn-edit').click(function(e) {
+        //   提交按钮 阻止默认行为
+        e.preventDefault();
+        //   获取表单对象
+        // var data = new FormData($('form')[0]);
+        // 或者
+        var data = new FormData(document.querySelector('form'))
+
+        $.ajax({
+          url: BigNew.user_edit,
+          type: 'post',
+          data: data,
+          contentType: false, //不需要修改数据类型
+          processData: false, //不需要修改数据
+          success: function(backData) {
+            console.log(backData);
+            if (backData.code == 200) {
+              // 提示用户修改成功
+              alert('修改成功');
+              // 刷新页面
+              // 修改成功只是刷新了当前页，因为使用iframe标签
+              //   (让a标签链接的内容在当前页显示，刷新的只是当前a标签的内容而不是外面的整个页面)
+              // ===所以刷新它的父元素
+              //   里面有个window，在它的外面还有一个window
+              window.parent.location.reload();
+              // 
+            }
+          }
+        })
       })
 
 
