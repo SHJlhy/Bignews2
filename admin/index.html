@@ -61,12 +61,14 @@
   </div>
 
   <script>
-    //    点击文章管理展示下面的列表  使用slideToggle 动画效果 折叠的时候 点击会从上往下展开
-    // 展开的时候点击会从下往上折叠起来
-    // 获取
-    $('.menu .level01:nth-child(2)').click(function() {
-      $(this).siblings('.level02').slideToggle();
-      //   $(this).find('.icon-arrowdownl').css('transform', 'rotate(45+"deg")');
+    $(function() {
+      //    点击文章管理展示下面的列表  使用slideToggle 动画效果 折叠的时候 点击会从上往下展开
+      // 展开的时候点击会从下往上折叠起来
+      // 获取
+      $('.menu .level01:nth-child(2)').click(function() {
+        $(this).siblings('.level02').slideToggle();
+        //   $(this).find('.icon-arrowdownl').css('transform', 'rotate(45+"deg")');
+      })
     })
   </script>
 </body>

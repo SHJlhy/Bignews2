@@ -37,7 +37,43 @@
       </form>
     </div>
   </div>
+  <script>
+    $('.input_sub').click(function(e) {
+      e.preventDefault();
+      // 判断能否登录 1 有内容没有输入 不可以登录提示
+      //             2 输入内容非空 调用接口  输入正确--提示用户 跳转到首页
+      //               输入错误已经再全局变量中已经设置
 
+      // 非空判断
+      var username = $('.input_txt').val();
+      var password = $('.input_pass').val();
+      // 1 有内容没有输入 不可以登录提示
+      if (username == '' || password == '') {
+        alert('请输入内容');
+      }
+      // 输入内容非空
+      // 调用接口
+      $.ajax({
+        url: BigNew.user_login,
+        type: 'post',
+        data: {
+          username: username,
+          password: password,
+        },
+        success: function(backData) {
+          console.log(backData);
+
+
+          if (backData.code == 200) {
+            alert('登录成功');
+            location.href = '../admin/index.html';
+          }
+        }
+
+      })
+
+    })
+  </script>
 </body>
 
 </html>
