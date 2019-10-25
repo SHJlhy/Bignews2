@@ -80,6 +80,23 @@
   <option value="{{$value.id}}">{{$value.name}}</option>
   {{/each}}
 </script>
+
+<!-- 定义数据列表 -->
+<script type='text/html' id='allData'>
+  {{each data.data}}
+  <tr>
+    <td>{{$value.title}}</td>
+    <td>{{$value.author}}</td>
+    <td>{{$value.category}}</td>
+    <td class="text-center">{{$value.date}}</td>
+    <td class="text-center">{{$value.state}}</td>
+    <td class="text-center" data_id='{{$value.id}}'>
+      <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
+      <a href="javascript:void(0);" class="btn btn-danger btn-xs delete">删除</a>
+    </td>
+  </tr>
+  {{/each}}
+</script>
 <script>
   $(function() {
     // 获取文章列表的分类 类似于获取文章分类列表只是显示内容的不一样 模板引擎 调用接口
@@ -93,6 +110,21 @@
         var html = template('art_list', backData);
         // 把返回值添加到结构中 少一个所有分类，只有一个不能在循环体内显示，在循环体的前面添加
         $('#selCategory').html(html);
+      }
+    })
+
+    //  二 获取所有文章列表数据  模板引擎  获取的伪数组
+    $.ajax({
+      url: BigNew.article_query,
+      data: {
+        perpage: 10,
+      },
+      success: function(backData) {
+        console.log(backData);
+
+        var html = template('allData', backData);
+        // 把返回值添加到结构中 少一个所有分类，只有一个不能在循环体内显示，在循环体的前面添加
+        $('tbody').html(html);
       }
     })
   })
