@@ -66,6 +66,7 @@
 
           if (backData.code == 200) {
             alert('登录成功');
+            localStorage.setItem('token', backData.token)
             location.href = '../admin/index.html';
           }
         }
