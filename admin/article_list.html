@@ -13,6 +13,8 @@
   <script src="./libs/jquery-1.12.4.min.js"></script>
   <!-- 引入模板引擎js文件 -->
   <script src="./libs/template-web.js"></script>
+  <!-- 导入分页插件 -->
+  <script src="./libs/jquery.twbsPagination.js"></script>
 </head>
 
 <body>
@@ -36,7 +38,7 @@
                             <option value="草稿">草稿</option>
                             <option value="已发布">已发布</option>
                         </select>
-            <button id="btnSearch" class="btn btn-default btn-sm">筛选</button>
+            <button id="btnSearch" class="btn btn-default btn-sm btn_search">筛选</button>
           </form>
         </div>
         <div class="col-xs-6">
@@ -69,6 +71,7 @@
         </tbody>
       </table>
       <div class="row text-center">
+        <ul id="pagination-demo" class="pagination-sm"></ul>
       </div>
     </div>
   </div>
@@ -115,19 +118,88 @@
 
     //  二 获取所有文章列表数据  模板引擎  获取的伪数组
     $.ajax({
-      url: BigNew.article_query,
-      data: {
-        perpage: 10,
-      },
-      success: function(backData) {
-        console.log(backData);
+        url: BigNew.article_query,
+        data: {
+          perpage: 10,
+        },
+        success: function(backData) {
+          console.log(backData);
 
-        var html = template('allData', backData);
-        // 把返回值添加到结构中 少一个所有分类，只有一个不能在循环体内显示，在循环体的前面添加
-        $('tbody').html(html);
-      }
+          const html = template('allData', backData);
+          // 把返回值添加到结构中 少一个所有分类，只有一个不能在循环体内显示，在循环体的前面添加
+          $('tbody').html(html);
+          // 分页 总页数是根据数据得来的，哪里有数据  获取页面数据的时候有返回值
+          $('#pagination-demo').twbsPagination({
+            totalPages: backData.data.totalPage,
+            visiblePages: 7,
+            first: "首页",
+            last: "尾页",
+            prev: "上一页",
+            next: "下一页",
+            onPageClick: function(event, page) {
+              // 获取页码 当前页
+              // console.log(page);
+              // 分页依旧需要保留筛选的状态
+              // 点击当前页获取数据
+              //   筛选的时候当前页的数据也要改变,总页数也要改变 在筛选模块改变总页数
+              const type = $('#selCategory').val();
+              const state = $('#selStatus').val();
+              $.ajax({
+
+                url: BigNew.article_query,
+                data: {
+                  perpage: 10,
+                  page: page,
+                  type: type,
+                  state: state,
+                },
+                success: function(backData) {
+
+
+                  const html = template('allData', backData);
+                  // 把返回值添加到结构中 少一个所有分类，只有一个不能在循环体内显示，在循环体的前面添加
+                  $('tbody').html(html);
+
+                }
+
+              })
+
+
+            },
+          })
+        }
+      })
+      //  筛选..................
+    $('.btn_search').click(function(e) {
+      e.preventDefault();
+      //   console.log(123);
+      const type = $('#selCategory').val();
+      const state = $('#selStatus').val();
+
+
+      $.ajax({
+        url: BigNew.article_query,
+        data: {
+          type,
+          state,
+          perpage: 10,
+        },
+        success: function(backData) {
+          console.log(backData);
+          //   把结果在页面中显示
+          const html = template('allData', backData);
+          // 把返回值添加到结构中 少一个所有分类，只有一个不能在循环体内显示，在循环体的前面添加
+          $('tbody').html(html);
+          $('#pagination-demo').twbsPagination('changeTotalPages', backData.data.totalPage, 1)
+        }
+      })
+
+
     })
+
   })
+</script>
+<script>
 </script>
 
 </html>
